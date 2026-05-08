@@ -10,6 +10,7 @@ services:
     region: oregon
     plan: free
     branch: main
+    pythonVersion: "3.11.9"
 
     # Build & Start Commands
     buildCommand: |
