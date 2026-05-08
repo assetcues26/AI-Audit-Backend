@@ -2,11 +2,12 @@
 Unit Tests — Image Utility Functions
 Tests the image processing and base64 encoding helpers.
 """
-import io
 import base64
+
 import pytest
 from PIL import Image
-from app.utils.image_utils import process_image_for_vlm, encode_image_to_base64
+
+from app.utils.image_utils import encode_image_to_base64, process_image_for_vlm
 
 
 class TestProcessImageForVLM:

@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field
 from typing import List, Optional
+
+from pydantic import BaseModel
+
 
 class AssetDetails(BaseModel):
     name: Optional[str] = None

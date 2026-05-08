@@ -1,5 +1,6 @@
 from app.services.vlm_providers.gemini_adapter import GeminiAdapter
 
+
 class VLMService:
     def __init__(self):
         # In a real app, this could be a factory based on settings

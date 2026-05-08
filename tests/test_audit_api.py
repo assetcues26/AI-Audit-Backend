@@ -3,9 +3,9 @@ Integration Tests — Audit API Endpoints
 Tests the full HTTP request/response cycle with mocked services.
 """
 import json
-import pytest
-from unittest.mock import patch, AsyncMock
-from app.models.schemas import ImageAuditResponse, AuditResult, BoundingBox
+from unittest.mock import patch
+
+from app.models.schemas import ImageAuditResponse
 
 
 class TestRootEndpoint:
@@ -55,7 +55,7 @@ class TestAuditSessionValidation:
         }
         data = {"session_metadata": json.dumps(metadata)}
 
-        with patch("app.api.v1.audit.engine.process_batch") as mock_engine:
+        with patch("app.api.v1.audit.AuditEngine.process_batch"):
             # The actual logic checks file count before calling engine
             response = client.post("/api/v1/audit/session", files=files, data=data)
             # Should get 400 because there's 1 image but 2 expected (asset + barcode)
@@ -63,7 +63,7 @@ class TestAuditSessionValidation:
 
 
 class TestAuditSessionSuccess:
-    @patch("app.api.v1.audit.engine.process_batch")
+    @patch("app.api.v1.audit.AuditEngine.process_batch")
     def test_single_pair_success(self, mock_process, client, sample_image_bytes, mock_audit_result):
         mock_process.return_value = [
             ImageAuditResponse(
@@ -95,7 +95,7 @@ class TestAuditSessionSuccess:
         assert results[0]["vlm_result"]["match_successful"] is True
         assert results[0]["vlm_result"]["asset_details"]["name"] == "Dell UltraSharp 27 Monitor"
 
-    @patch("app.api.v1.audit.engine.process_batch")
+    @patch("app.api.v1.audit.AuditEngine.process_batch")
     def test_barcode_skipped_pair(self, mock_process, client, sample_image_bytes, mock_audit_result):
         mock_process.return_value = [
             ImageAuditResponse(
@@ -121,7 +121,7 @@ class TestAuditSessionSuccess:
         assert response.status_code == 200
         assert mock_process.called
 
-    @patch("app.api.v1.audit.engine.process_batch")
+    @patch("app.api.v1.audit.AuditEngine.process_batch")
     def test_multi_pair_session(self, mock_process, client, sample_image_bytes, mock_audit_result):
         mock_process.return_value = [
             ImageAuditResponse(pair_index=i, yolo_boxes=[], vlm_result=mock_audit_result)
@@ -157,7 +157,7 @@ class TestAuditSessionSuccess:
 
 
 class TestAuditSessionResponseFormat:
-    @patch("app.api.v1.audit.engine.process_batch")
+    @patch("app.api.v1.audit.AuditEngine.process_batch")
     def test_response_contains_required_fields(self, mock_process, client, sample_image_bytes, mock_audit_result):
         mock_process.return_value = [
             ImageAuditResponse(pair_index=0, yolo_boxes=[], vlm_result=mock_audit_result)

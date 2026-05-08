@@ -1,6 +1,8 @@
-import io
-from PIL import Image
 import base64
+import io
+
+from PIL import Image
+
 
 def process_image_for_vlm(image_bytes: bytes):
     # For Gemini, we can send PIL images or base64

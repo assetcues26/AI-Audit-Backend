@@ -2,18 +2,18 @@
 Unit Tests — Local Storage Adapter
 Tests file-based session persistence.
 """
-import os
 import json
-import pytest
-from app.services.storage.local_adapter import LocalStorageAdapter
+import os
 from unittest.mock import patch
+
+from app.services.storage.local_adapter import LocalStorageAdapter
 
 
 class TestLocalStorageAdapter:
     def test_creates_directory_on_init(self, tmp_storage_path):
         with patch("app.services.storage.local_adapter.settings") as mock_settings:
             mock_settings.LOCAL_STORAGE_PATH = tmp_storage_path
-            adapter = LocalStorageAdapter()
+            LocalStorageAdapter()
             assert os.path.exists(tmp_storage_path)
 
     def test_save_session_creates_json_file(self, tmp_storage_path):

@@ -4,9 +4,13 @@ Tests that all data models validate correctly and reject bad data.
 """
 import pytest
 from pydantic import ValidationError
+
 from app.models.schemas import (
-    AssetDetails, BarcodeDetails, AuditResult,
-    BoundingBox, ImageAuditResponse,
+    AssetDetails,
+    AuditResult,
+    BarcodeDetails,
+    BoundingBox,
+    ImageAuditResponse,
 )
 
 

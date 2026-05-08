@@ -2,12 +2,10 @@
 Shared test fixtures for the AssetCues Backend test suite.
 All fixtures here are available automatically to every test file.
 """
-import os
 import io
-import json
+import os
+
 import pytest
-import tempfile
-from unittest.mock import patch, MagicMock
 
 # --- Environment Setup ---
 # These must be set BEFORE any app imports so that pydantic-settings
@@ -19,11 +17,14 @@ os.environ.setdefault("STORAGE_PROVIDER", "local")
 os.environ.setdefault("LOG_LEVEL", "DEBUG")
 
 from fastapi.testclient import TestClient
-from main import app
+
 from app.models.schemas import (
-    AuditResult, AssetDetails, BarcodeDetails,
-    BoundingBox, ImageAuditResponse,
+    AssetDetails,
+    AuditResult,
+    BarcodeDetails,
+    BoundingBox,
 )
+from main import app
 
 
 # ──────────────────────────────────────────────

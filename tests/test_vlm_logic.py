@@ -4,10 +4,12 @@ Tests prompt generation, JSON extraction, and error fallback behavior.
 All external API calls are mocked.
 """
 import json
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import MagicMock, patch, AsyncMock
-from app.services.vlm_providers.gemini_adapter import GeminiAdapter
+
 from app.models.schemas import AuditResult
+from app.services.vlm_providers.gemini_adapter import GeminiAdapter
 
 
 class TestPromptGeneration:

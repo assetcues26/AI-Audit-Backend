@@ -2,10 +2,12 @@
 Integration Tests — Audit Engine
 Tests the AuditEngine orchestration with mocked YOLO + VLM services.
 """
+from unittest.mock import AsyncMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
+
+from app.models.schemas import BoundingBox, ImageAuditResponse
 from app.services.audit_engine import AuditEngine
-from app.models.schemas import AuditResult, BoundingBox, ImageAuditResponse
 
 
 class TestAuditEngineProcessBatch:
