@@ -10,17 +10,48 @@ __pycache__/
 *$py.class
 .pytest_cache/
 
-# Environment Variables
+# Environment Variables (Secrets — NEVER push this)
 .env
 
 # Project Specific (Data/Logs)
 audit_sessions/*
 !audit_sessions/.gitkeep
 
-# Weights/Models (Optional, but keeping repo light)
+# Weights/Models (Auto-downloaded by Ultralytics)
 *.pt
 *.onnx
+*.torchscript
+*.engine
+
+# Databases
+*.sqlite3
+*.db
+
+# Testing/Coverage
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Logs
+*.log
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Distribution / Packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# IDE/Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # OS files
 .DS_Store
 Thumbs.db
+desktop.ini
