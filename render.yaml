@@ -1,0 +1,40 @@
+# ──────────────────────────────────────────────────────────────
+# Render Blueprint — AssetCues AI Audit Backend
+# Auto-deploys when code is pushed to main
+# https://render.com/docs/blueprint-spec
+# ──────────────────────────────────────────────────────────────
+services:
+  - type: web
+    name: assetcues-audit-backend
+    runtime: python
+    region: oregon
+    plan: free
+    branch: main
+
+    # Build & Start Commands
+    buildCommand: |
+      pip install --upgrade pip &&
+      pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+
+    # Health Check
+    healthCheckPath: /
+
+    # Environment Variables (set these in Render Dashboard > Environment)
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false  # Must be set manually in Render dashboard (secret)
+      - key: VLM_MODEL
+        value: gemini-3.1-flash-lite-preview
+      - key: YOLO_MODEL
+        value: yolov8n.pt
+      - key: STORAGE_PROVIDER
+        value: local
+      - key: LOCAL_STORAGE_PATH
+        value: ./audit_sessions
+      - key: CORS_ORIGINS
+        value: '["https://your-frontend-url.onrender.com","http://localhost:5173"]'
+      - key: LOG_LEVEL
+        value: INFO
+      - key: PYTHON_VERSION
+        value: "3.11.9"
