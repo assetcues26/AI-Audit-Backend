@@ -1,0 +1,72 @@
+# ──────────────────────────────────────────────────────────────
+# CI Pipeline — AssetCues AI Audit Backend
+# Runs unit + integration tests on every PR to main
+# Tests MUST pass before merging is allowed
+# ──────────────────────────────────────────────────────────────
+name: Backend CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    env:
+      # Dummy values so pydantic-settings doesn't crash during import
+      GEMINI_API_KEY: "ci-test-key-not-real"
+      VLM_MODEL: "gemini-test"
+      YOLO_MODEL: "yolov8n.pt"
+      STORAGE_PROVIDER: "local"
+      LOCAL_STORAGE_PATH: "./audit_sessions"
+      CORS_ORIGINS: '["http://localhost:5173"]'
+      LOG_LEVEL: "DEBUG"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio httpx
+
+      - name: Create audit_sessions directory
+        run: mkdir -p audit_sessions
+
+      - name: Run tests
+        run: |
+          python -m pytest tests/ -v --tb=short --strict-markers
+
+  lint:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install linting tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff
+
+      - name: Run linter
+        run: ruff check . --output-format=github

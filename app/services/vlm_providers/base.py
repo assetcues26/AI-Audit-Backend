@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
-from app.models.schemas import AuditResult
 from typing import List
+
+from app.models.schemas import AuditResult
+
 
 class VLMProvider(ABC):
     @abstractmethod

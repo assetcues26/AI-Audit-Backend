@@ -1,7 +1,9 @@
-import logging
 import json
-import google.generativeai as genai
+import logging
 from typing import List
+
+import google.generativeai as genai
+
 from app.core.config import settings
 from app.models.schemas import AuditResult
 from app.services.vlm_providers.base import VLMProvider
@@ -18,9 +20,9 @@ class GeminiAdapter(VLMProvider):
     async def analyze_images(self, asset_image: bytes, barcode_image: bytes, asset_boxes: List[str]) -> AuditResult:
         prompt = self._get_prompt(asset_boxes)
         img1 = process_image_for_vlm(asset_image)
-        
+
         content_parts = [prompt, img1]
-        
+
         # Only add the second image if it's not empty
         if barcode_image and len(barcode_image) > 0:
             logger.info("Including barcode image in VLM request")
@@ -37,7 +39,7 @@ class GeminiAdapter(VLMProvider):
         except Exception as api_err:
             logger.error(f"Gemini API call failed: {str(api_err)}")
             raise api_err
-        
+
         # Extract JSON from response
         text = response.text
         try:
@@ -63,7 +65,7 @@ class GeminiAdapter(VLMProvider):
 
     def _get_prompt(self, asset_boxes: List[str]) -> str:
         yolo_hint = f"YOLO has detected the following potential regions of interest: {', '.join(asset_boxes)}." if asset_boxes else "YOLO detected no specific regions; please analyze the entire image."
-        
+
         return f"""
         You are a certified physical asset auditor with expert knowledge of industrial, commercial, and office equipment.
 
@@ -132,5 +134,5 @@ OUTPUT FORMAT:
     "condition_rating": "Clear" | "Partially Damaged" | "Unreadable" | null
   }}
 }}
-        
+
         """
